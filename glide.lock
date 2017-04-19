@@ -1,0 +1,12 @@
+hash: df0a922380f167c49da418c71596b5b46cee1e84e635ac50e95f763c703aedb6
+updated: 2017-04-19T18:16:22.592466584+09:00
+imports:
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: golang.org/x/sync
+  version: 450f422ab23cf9881c94e2db30cac0eb1b7cf80c
+  subpackages:
+  - errgroup
+- name: gopkg.in/cheggaaa/pb.v1
+  version: b6229822fa186496fcbf34111237e7a9693c6971
+testImports: []
