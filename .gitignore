@@ -76,3 +76,5 @@ _testmain.go
 vendor/
 
 
+### custom setting
+/gumk
