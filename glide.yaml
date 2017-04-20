@@ -7,3 +7,6 @@ import:
 - package: golang.org/x/sync
   subpackages:
   - errgroup
+- package: golang.org/x/net
+  subpackages:
+  - context
