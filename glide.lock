@@ -5,6 +5,8 @@ imports:
   version: 14207d285c6c197daabb5c9793d63e7af9ab2d50
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/Songmu/prompter
+  version: b5721e8d556682bcef33262731d98a39dee14dc4
 - name: golang.org/x/net
   version: 69d4b8aa71caaaa75c3dfc11211d1be495abec7c
   subpackages:

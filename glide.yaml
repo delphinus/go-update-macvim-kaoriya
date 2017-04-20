@@ -10,3 +10,5 @@ import:
 - package: golang.org/x/net
   subpackages:
   - context
+- package: github.com/Songmu/prompter
+  version: ^0.1.0
