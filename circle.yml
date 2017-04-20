@@ -6,15 +6,15 @@ machine:
 
 dependencies:
   pre:
-    # use downloaded Go instead of the buildt-in one
+    - ': use downloaded Go instead of the buildt-in one'
     - curl -o $HOME/$GODIST https://storage.googleapis.com/golang/$GODIST
     - sudo rm -rf /usr/local/go
     - sudo tar -C /usr/local -xzf $HOME/$GODIST
-    # install needed tools
+    - ': install needed tools'
     - go get github.com/Masterminds/glide
     - go get github.com/golang/lint/golint
     - go get github.com/kisielk/errcheck
-    # move sources to the correct path
+    - ': move sources to the correct path'
     - mkdir -p $REPO_ROOT
     - rsync -azC --delete ./ $REPO_ROOT/
   override:
@@ -26,3 +26,19 @@ test:
     - cd $REPO_ROOT && golint $(glide novendor)   2>&1 | xargs -ri sh -c 'echo "{}" && false'
     - cd $REPO_ROOT && errcheck $(glide novendor) 2>&1 | xargs -ri sh -c 'echo "{}" && false'
     - make build
+
+deployment:
+  release:
+    #tag: /v\d+(\.\d+)*/
+    tag: /test-.*/
+    owner: circleci
+    commands:
+      - ': use downloaded Go instead of the buildt-in one'
+      - curl -o $HOME/$GODIST https://storage.googleapis.com/golang/$GODIST
+      - sudo rm -rf /usr/local/go
+      - sudo tar -C /usr/local -xzf $HOME/$GODIST
+      - ': move sources to the correct path'
+      - mkdir -p $REPO_ROOT
+      - rsync -azC --delete ./ $REPO_ROOT/
+      - ': start release'
+      - cd $REPO_ROOT && make release
