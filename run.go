@@ -59,7 +59,7 @@ func (g *Gumk) Run() error {
 		return errors.New("cancelled")
 	}
 
-	if err := f.save(e); err != nil {
+	if err := f.save(); err != nil {
 		return errors.Wrap(err, "error in save")
 	}
 
@@ -79,20 +79,10 @@ func (g *Gumk) findVersion(s []byte) ([]byte, error) {
 }
 
 func (g *Gumk) confirmProceed(f Formula, e element) bool {
-	fmt.Printf(`found:
-  tag:     %s
-  version: %s
-  dmg:     %s
-  appcast: %s
-
-`, string(e.tag), string(e.version), string(e.dmg), string(e.appcast))
-	fmt.Printf(`to update:
-  tag:     %s
-  version: %s
-  dmg:     %x
-  appcast: %x
-
-`, f.tag, string(f.version), f.dmg, f.appcast)
+	fmt.Println("found:")
+	fmt.Println(e)
+	fmt.Println("to update:")
+	fmt.Println(f.element)
 
 	return prompter.YN("proceed?", false)
 }
