@@ -34,7 +34,7 @@ define cross-compile
 	: archive each binary
 	for i in dist/*; \
 	do \
-		j=$$(echo $$i | sed -e 's/_[^\.]*//; \
+		j=$$(echo $$i | sed -e 's/_[^.]*//'); \
 		mv $$i $$j; \
 		zip -j $${i%.*} $$j; \
 		rm $$j;
