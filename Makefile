@@ -24,8 +24,6 @@ compile: ## Compile binaries
 	: archive each binary
 	for i in dist/*; \
 	do \
-		j=$$(echo $$i | sed -e 's/_[^.]*//'); \
-		mv $$i $$j; \
-		zip -j $${i%.*} $$j; \
-		rm $$j; \
+		zip -j $${i%.*} $$i; \
+		rm $$i; \
 	done
