@@ -37,6 +37,6 @@ define cross-compile
 		j=$$(echo $$i | sed -e 's/_[^.]*//'); \
 		mv $$i $$j; \
 		zip -j $${i%.*} $$j; \
-		rm $$j;
+		rm $$j; \
 	done
 endef
