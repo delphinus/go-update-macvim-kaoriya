@@ -14,9 +14,10 @@ import (
 
 // Gumk is a struct of the app
 type Gumk struct {
-	context                        context.Context
-	formula, dmg, appcast, release string
-	httpClient                     *http.Client
+	context               context.Context
+	tag, formula, appcast string
+	dmg, release          func() string
+	httpClient            *http.Client
 }
 
 // New returns an instance of the app
@@ -42,9 +43,9 @@ func (g *Gumk) Run() error {
 	appcastBar := make(chan *pb.ProgressBar)
 	releaseBar := make(chan *pb.ProgressBar)
 
-	eg.Go(func() error { return g.fetch(g.dmg, dmg, dmgBar) })
+	eg.Go(func() error { return g.fetch(g.dmg(), dmg, dmgBar) })
 	eg.Go(func() error { return g.fetch(g.appcast, appcast, appcastBar) })
-	eg.Go(func() error { return g.fetch(g.release, release, releaseBar) })
+	eg.Go(func() error { return g.fetch(g.release(), release, releaseBar) })
 
 	p, err := pb.StartPool(
 		(<-dmgBar).Prefix("dmg    "),
