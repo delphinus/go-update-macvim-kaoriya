@@ -1,7 +1,8 @@
 DIST_DIR        = dist
-GOX_BINARY_PATH = $(DIST_DIR)/{{.Dir}}-{{.OS}}-{{.Arch}}
-GOX_OS          = darwin linux windows
-GOX_ARCH        = 386 amd64
+CMD_DIR         = cmd/gumk
+GOX_BINARY_PATH = ../../$(DIST_DIR)/{{.Dir}}-{{.OS}}-{{.Arch}}
+GOX_OS          = darwin
+GOX_ARCH        = amd64
 
 # ref. http://postd.cc/auto-documented-makefile/
 
@@ -15,28 +16,14 @@ build: ## compile app
 install: ## Install packages for dependencies
 	glide install
 
-release: ## Release binaries on GitHub by the specified tag
-ifeq ($(CIRCLE_TAG),)
-	$(warning No CIRCLE_TAG environmental variable)
-else
-	$(call cross-compile)
-	: Releasing binaries on tag: $(CIRCLE_TAG)
-	go get github.com/tcnksm/ghr
-	@ghr -u delphinus -replace -prerelease -debug $(CIRCLE_TAG) dist/
-endif
-
-# $(call cross-compile)
-define cross-compile
+compile: ## Compile binaries
 	rm -fr $(DIST_DIR)
 	: cross compile
 	go get github.com/mitchellh/gox
-	gox -output '$(GOX_BINARY_PATH)' -os '$(GOX_OS)' -arch '$(GOX_ARCH)'
+	cd $(CMD_DIR) && gox -output '$(GOX_BINARY_PATH)' -os '$(GOX_OS)' -arch '$(GOX_ARCH)'
 	: archive each binary
 	for i in dist/*; \
 	do \
-		j=$$(echo $$i | sed -e 's/_[^\.]*//; \
-		mv $$i $$j; \
-		zip -j $${i%.*} $$j; \
-		rm $$j;
+		zip -j $${i%.*} $$i; \
+		rm $$i; \
 	done
-endef
