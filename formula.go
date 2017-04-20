@@ -14,8 +14,8 @@ type element struct {
 
 // Formula is a struct for formulas
 type Formula struct {
-	path string
-	text []byte
+	path, tag string
+	text      []byte
 	element
 }
 
@@ -23,6 +23,7 @@ type Formula struct {
 func NewFormula(path, tag string, version, dmg, appcast []byte) Formula {
 	return Formula{
 		path: path,
+		tag:  tag,
 		element: element{
 			tag:     []byte(tag),
 			version: version,

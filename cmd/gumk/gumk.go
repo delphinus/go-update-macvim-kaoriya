@@ -17,6 +17,7 @@ func main() {
 		os.Exit(1)
 	}
 	app := gumk.New(
+		gumk.WithTag(tag),
 		gumk.WithFormula(),
 		gumk.WithDMG(tag),
 		gumk.WithRelease(tag),
