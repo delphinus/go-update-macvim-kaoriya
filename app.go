@@ -84,7 +84,7 @@ func (g *Gumk) Run() error {
 		return errors.Wrap(err, "error in save")
 	}
 
-	fmt.Print("saved successfully")
+	fmt.Println("saved successfully")
 
 	return nil
 }
