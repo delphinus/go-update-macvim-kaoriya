@@ -106,7 +106,7 @@ func (g *Gumk) confirmProceed(f Formula, e element) bool {
   dmg:     %s
   appcast: %s
 `, string(e.tag), string(e.version), string(e.dmg), string(e.appcast))
-	fmt.Print(`to update:
+	fmt.Printf(`to update:
   tag:     %s
   version: %s
   dmg:     %s
