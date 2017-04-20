@@ -29,7 +29,7 @@ func (g *Gumk) fetch(url string, w io.Writer, bar chan *pb.ProgressBar) error {
 
 	go func() {
 		<-g.context.Done()
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		b.Finish()
 	}()
 
