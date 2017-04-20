@@ -31,7 +31,7 @@ deployment:
   release:
     #tag: /v\d+(\.\d+)*/
     tag: /test-.*/
-    owner: circleci
+    owner: delphinus
     commands:
       - ': use downloaded Go instead of the buildt-in one'
       - curl -o $HOME/$GODIST https://storage.googleapis.com/golang/$GODIST
