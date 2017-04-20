@@ -37,4 +37,4 @@ deployment:
       - cd $REPO_ROOT && make compile
       - ': release binaries'
       - go get github.com/tcnksm/ghr
-      - cd $REPO_ROOT && ghr -u delphinus -r $CIRCLE_PROJECT_REPONAME -replace -prerelease -debug $CIRCLE_TAG dist/
+      - cd $REPO_ROOT && ghr -u delphinus -r $CIRCLE_PROJECT_REPONAME -replace -draft -debug $CIRCLE_TAG dist/
