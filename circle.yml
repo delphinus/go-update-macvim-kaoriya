@@ -33,4 +33,8 @@ deployment:
     tag: /test-.*/
     owner: delphinus
     commands:
-      - cd $REPO_ROOT && make release
+      - ': compile binaries'
+      - cd $REPO_ROOT && make compile
+      - ': release binaries'
+      - go get github.com/tcnksm/ghr
+      - ghr -u delphinus -r $CIRCLE_PROJECT_REPONAME -replace -prerelease -debug $CIRCLE_TAG dist/
