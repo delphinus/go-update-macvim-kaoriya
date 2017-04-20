@@ -22,7 +22,7 @@ dependencies:
 
 test:
   override:
-    - go vet $(glide novendor)
-    - golint $(glide novendor)   2>&1 | xargs -ri sh -c 'echo "{}" && false'
-    - errcheck $(glide novendor) 2>&1 | xargs -ri sh -c 'echo "{}" && false'
+    - cd $REPO_ROOT && go vet $(glide novendor)
+    - cd $REPO_ROOT && golint $(glide novendor)   2>&1 | xargs -ri sh -c 'echo "{}" && false'
+    - cd $REPO_ROOT && errcheck $(glide novendor) 2>&1 | xargs -ri sh -c 'echo "{}" && false'
     - make build
