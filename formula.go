@@ -35,7 +35,7 @@ func NewFormula(path, tag string, version, dmg, appcast []byte) Formula {
 var formulaRe = regexp.MustCompile(`else
     version '(\d\.\d):(\d+)'
     sha256 '([\da-f]+)'`)
-var appcastRe = regexp.MustCompile(`(?<=checkpoint: ')[\da-f]+`)
+var appcastRe = regexp.MustCompile(`(checkpoint: ')([\da-f]+)`)
 
 func (f *Formula) read() (element, error) {
 	e := element{}
@@ -49,13 +49,13 @@ func (f *Formula) read() (element, error) {
 		return e, errors.Wrap(err, "cannot find elements")
 	}
 
-	a := appcastRe.Find(text)
-	if len(a) == 0 {
+	a := appcastRe.FindSubmatch(text)
+	if len(a) != 3 {
 		return e, errors.Wrap(err, "cannot find appcast")
 	}
 
 	f.text = text
-	e.appcast = a
+	e.appcast = a[2]
 	e.version = b[1]
 	e.tag = b[2]
 	e.dmg = b[3]
@@ -65,7 +65,7 @@ func (f *Formula) read() (element, error) {
 var formulaReplace = `else
     version '%s:%s'
     sha256 '%s'`
-var appcastReplace = `%s`
+var appcastReplace = `$1%s`
 
 func (f *Formula) save(e element) error {
 	formulaRepl := []byte(fmt.Sprintf(formulaReplace, e.version, e.tag, e.dmg))
