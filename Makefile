@@ -1,5 +1,6 @@
 DIST_DIR        = dist
-GOX_BINARY_PATH = $(DIST_DIR)/{{.Dir}}-{{.OS}}-{{.Arch}}
+CMD_DIR         = cmd/gumk
+GOX_BINARY_PATH = ../../$(DIST_DIR)/{{.Dir}}-{{.OS}}-{{.Arch}}
 GOX_OS          = darwin linux windows
 GOX_ARCH        = 386 amd64
 
@@ -30,7 +31,7 @@ define cross-compile
 	rm -fr $(DIST_DIR)
 	: cross compile
 	go get github.com/mitchellh/gox
-	gox -output '$(GOX_BINARY_PATH)' -os '$(GOX_OS)' -arch '$(GOX_ARCH)'
+	cd $(CMD_DIR) && gox -output '$(GOX_BINARY_PATH)' -os '$(GOX_OS)' -arch '$(GOX_ARCH)'
 	: archive each binary
 	for i in dist/*; \
 	do \
