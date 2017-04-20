@@ -29,8 +29,7 @@ test:
 
 deployment:
   release:
-    #tag: /v\d+(\.\d+)*/
-    tag: /test-.*/
+    tag: /v\d+(\.\d+)*/
     owner: delphinus
     commands:
       - ': compile binaries'
