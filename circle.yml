@@ -22,7 +22,7 @@ dependencies:
 
 test:
   override:
-    - go vet $IMPORT_PATH/...
-    - golint $IMPORT_PATH/...   2>&1 | xargs -ri sh -c 'echo "{}" && false'
-    - errcheck $IMPORT_PATH/... 2>&1 | xargs -ri sh -c 'echo "{}" && false'
+    - go vet $(glide novendor)
+    - golint $(glide novendor)   2>&1 | xargs -ri sh -c 'echo "{}" && false'
+    - errcheck $(glide novendor) 2>&1 | xargs -ri sh -c 'echo "{}" && false'
     - make build
