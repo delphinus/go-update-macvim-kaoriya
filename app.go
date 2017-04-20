@@ -105,13 +105,15 @@ func (g *Gumk) confirmProceed(f Formula, e element) bool {
   version: %s
   dmg:     %s
   appcast: %s
+
 `, string(e.tag), string(e.version), string(e.dmg), string(e.appcast))
 	fmt.Printf(`to update:
   tag:     %s
   version: %s
-  dmg:     %s
-  appcast: %s
-`, string(f.tag), string(f.version), string(f.dmg), string(f.appcast))
+  dmg:     %x
+  appcast: %x
+
+`, f.tag, string(f.version), f.dmg, f.appcast)
 
 	return prompter.YN("proceed?", false)
 }
