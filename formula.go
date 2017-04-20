@@ -65,13 +65,13 @@ func (f *Formula) read() (element, error) {
 
 var formulaReplace = `else
     version '%s:%s'
-    sha256 '%s'`
-var appcastReplace = `$1%s`
+    sha256 '%x'`
+var appcastReplace = `${1}%x`
 
 func (f *Formula) save(e element) error {
-	formulaRepl := []byte(fmt.Sprintf(formulaReplace, e.version, e.tag, e.dmg))
+	formulaRepl := []byte(fmt.Sprintf(formulaReplace, string(f.version), f.tag, f.dmg))
 	f.text = formulaRe.ReplaceAll(f.text, formulaRepl)
-	appcastRepl := []byte(fmt.Sprintf(appcastReplace, e.appcast))
+	appcastRepl := []byte(fmt.Sprintf(appcastReplace, f.appcast))
 	f.text = appcastRe.ReplaceAll(f.text, appcastRepl)
 	if err := ioutil.WriteFile(f.path, f.text, 0644); err != nil {
 		return errors.Wrap(err, "error in WriteFile")
