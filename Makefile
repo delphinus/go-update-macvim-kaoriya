@@ -1,8 +1,8 @@
 DIST_DIR        = dist
 CMD_DIR         = cmd/gumk
 GOX_BINARY_PATH = ../../$(DIST_DIR)/{{.Dir}}-{{.OS}}-{{.Arch}}
-GOX_OS          = darwin linux windows
-GOX_ARCH        = 386 amd64
+GOX_OS          = darwin
+GOX_ARCH        = amd64
 
 # ref. http://postd.cc/auto-documented-makefile/
 
