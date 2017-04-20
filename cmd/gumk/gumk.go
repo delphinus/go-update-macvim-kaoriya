@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"net/http"
@@ -16,14 +17,15 @@ func main() {
 		fmt.Fprintln(os.Stderr, "tag needed to execute")
 		os.Exit(1)
 	}
-	app := gumk.New(
+	app, err := gumk.New(
+		gumk.WithContext(context.Background()),
 		gumk.WithTag(tag),
-		gumk.WithFormula(),
-		gumk.WithDMG(tag),
-		gumk.WithRelease(tag),
-		gumk.WithAppcast(),
 		gumk.WithHTTPClient(http.DefaultClient),
 	)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error ocurred: %v\n", err)
+		os.Exit(1)
+	}
 
 	if err := app.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "error ocurred: %v\n", err)

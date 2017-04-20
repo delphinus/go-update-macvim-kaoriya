@@ -23,19 +23,39 @@ type Gumk struct {
 }
 
 // New returns an instance of the app
-func New(options ...Option) *Gumk {
-	g := Gumk{}
+func New(opts ...Option) (*Gumk, error) {
+	g := &Gumk{}
 
-	for _, o := range options {
-		o.apply(&g)
+	opts = append(opts,
+		WithFormula(),
+		WithAppcast(),
+	)
+
+	for _, o := range opts {
+		o.apply(g)
 	}
 
-	return &g
+	if g.context == nil {
+		return nil, errors.New("cannot detect context")
+	}
+
+	if g.tag == "" {
+		return nil, errors.New("cannot detect tag")
+	}
+
+	if g.httpClient == nil {
+		return nil, errors.New("cannot detect HTTP client")
+	}
+
+	WithDMG(g.tag).apply(g)
+	WithRelease(g.tag).apply(g)
+
+	return g, nil
 }
 
 // Run will execute the process
 func (g *Gumk) Run() error {
-	eg, ctx := errgroup.WithContext(context.Background())
+	eg, ctx := errgroup.WithContext(g.context)
 	g.context = ctx
 	dmg := sha256.New()
 	appcast := sha256.New()
