@@ -16,18 +16,7 @@ build: ## compile app
 install: ## Install packages for dependencies
 	glide install
 
-release: ## Release binaries on GitHub by the specified tag
-ifeq ($(CIRCLE_TAG),)
-	$(warning No CIRCLE_TAG environmental variable)
-else
-	$(call cross-compile)
-	: Releasing binaries on tag: $(CIRCLE_TAG)
-	go get github.com/tcnksm/ghr
-	@ghr -u delphinus -replace -prerelease -debug $(CIRCLE_TAG) dist/
-endif
-
-# $(call cross-compile)
-define cross-compile
+compile: ## Compile binaries
 	rm -fr $(DIST_DIR)
 	: cross compile
 	go get github.com/mitchellh/gox
@@ -40,4 +29,3 @@ define cross-compile
 		zip -j $${i%.*} $$j; \
 		rm $$j; \
 	done
-endef
