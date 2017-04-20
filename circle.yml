@@ -33,12 +33,4 @@ deployment:
     tag: /test-.*/
     owner: delphinus
     commands:
-      - ': use downloaded Go instead of the buildt-in one'
-      - curl -o $HOME/$GODIST https://storage.googleapis.com/golang/$GODIST
-      - sudo rm -rf /usr/local/go
-      - sudo tar -C /usr/local -xzf $HOME/$GODIST
-      - ': move sources to the correct path'
-      - mkdir -p $REPO_ROOT
-      - rsync -azC --delete ./ $REPO_ROOT/
-      - ': start release'
       - cd $REPO_ROOT && make release
