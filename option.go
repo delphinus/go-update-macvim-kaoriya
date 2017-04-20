@@ -10,6 +10,13 @@ type Option interface {
 	apply(*Gumk)
 }
 
+// WithTag is an option to determine the tag to download
+func WithTag(tag string) Option { return withTag{tag} }
+
+type withTag struct{ tag string }
+
+func (w withTag) apply(g *Gumk) { g.tag = w.tag }
+
 // WithFormula is an option to determine the path of the formula
 func WithFormula() Option {
 	return withFormula{"/usr/local/Homebrew/Library/Taps/delphinus/homebrew-macvim-kaoriya/Casks/macvim-kaoriya.rb"}
@@ -22,24 +29,26 @@ func (w withFormula) apply(g *Gumk) { g.formula = w.path }
 // WithDMG is an option to determine the URL of the DMG file
 func WithDMG(tag string) Option {
 	return withDMG{
-		fmt.Sprintf("https://github.com/splhack/macvim-kaoriya/releases/download/%s/MacVim-KaoriYa-%s.dmg", tag, tag),
+		"https://github.com/splhack/macvim-kaoriya/releases/download/%s/MacVim-KaoriYa-%s.dmg",
+		tag,
 	}
 }
 
-type withDMG struct{ url string }
+type withDMG struct{ url, tag string }
 
-func (w withDMG) apply(g *Gumk) { g.dmg = w.url }
+func (w withDMG) apply(g *Gumk) { g.dmg = func() string { return fmt.Sprintf(w.url, w.tag, w.tag) } }
 
 // WithRelease is an option to determine the URL of the release file
 func WithRelease(tag string) Option {
 	return withRelease{
-		fmt.Sprintf("https://github.com/splhack/macvim-kaoriya/releases/tag/%s", tag),
+		"https://github.com/splhack/macvim-kaoriya/releases/tag/%s",
+		tag,
 	}
 }
 
-type withRelease struct{ url string }
+type withRelease struct{ url, tag string }
 
-func (w withRelease) apply(g *Gumk) { g.release = w.url }
+func (w withRelease) apply(g *Gumk) { g.release = func() string { return fmt.Sprintf(w.url, w.tag) } }
 
 // WithAppcast is an option to determine the URL of the appcast file
 func WithAppcast() Option {

@@ -1,10 +1,18 @@
-hash: d5e9b2d0abc4bbf1686290f51c5100e98bf34b763373205a0f4945875d76063f
-updated: 2017-04-20T10:22:13.977142354+09:00
+hash: e621addea5ead026c17b9e97720fb3f152cdf80d97a48e4f83bdb6a489621882
+updated: 2017-04-20T10:29:30.522888077+09:00
 imports:
+- name: github.com/mattn/go-isatty
+  version: 30a891c33c7cde7b02a981314b4228ec99380cca
 - name: github.com/mattn/go-runewidth
   version: 14207d285c6c197daabb5c9793d63e7af9ab2d50
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/Songmu/prompter
+  version: b5721e8d556682bcef33262731d98a39dee14dc4
+- name: golang.org/x/crypto
+  version: f6b343c37ca80bfa8ea539da67a0b621f84fab1d
+  subpackages:
+  - ssh/terminal
 - name: golang.org/x/net
   version: 69d4b8aa71caaaa75c3dfc11211d1be495abec7c
   subpackages:
@@ -13,6 +21,10 @@ imports:
   version: 450f422ab23cf9881c94e2db30cac0eb1b7cf80c
   subpackages:
   - errgroup
+- name: golang.org/x/sys
+  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  subpackages:
+  - unix
 - name: gopkg.in/cheggaaa/pb.v1
   version: b6229822fa186496fcbf34111237e7a9693c6971
 testImports: []
