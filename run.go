@@ -28,17 +28,24 @@ func (g *Gumk) Run() error {
 	eg.Go(func() error { return g.fetch(g.appcast, appcast, appcastBar) })
 	eg.Go(func() error { return g.fetch(g.release(), release, releaseBar) })
 
-	p, err := pb.StartPool(
-		(<-dmgBar).Prefix("dmg    "),
-		(<-appcastBar).Prefix("appcast"),
-		(<-releaseBar).Prefix("release"),
-	)
-	if err != nil {
-		return errors.Wrap(err, "error in StartPool") // do not die here
-	}
+	var p *pb.Pool
+	eg.Go(func() error {
+		var err error
+		p, err = pb.StartPool(
+			(<-dmgBar).Prefix("dmg    "),
+			(<-appcastBar).Prefix("appcast"),
+			(<-releaseBar).Prefix("release"),
+		)
+		if err != nil {
+			return errors.Wrap(err, "error in StartPool")
+		}
+		return nil
+	})
 
-	err = eg.Wait()
-	_ = p.Stop()
+	err := eg.Wait()
+	if p != nil {
+		_ = p.Stop()
+	}
 
 	if err != nil {
 		return errors.Wrap(err, "error in Wait")
