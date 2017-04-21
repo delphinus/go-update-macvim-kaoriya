@@ -1,6 +1,7 @@
 package gumk
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 )
@@ -9,6 +10,13 @@ import (
 type Option interface {
 	apply(*Gumk)
 }
+
+// WithContext is an option to determine context
+func WithContext(ctx context.Context) Option { return withContext{ctx} }
+
+type withContext struct{ ctx context.Context }
+
+func (w withContext) apply(g *Gumk) { g.context = w.ctx }
 
 // WithTag is an option to determine the tag to download
 func WithTag(tag string) Option { return withTag{tag} }
