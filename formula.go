@@ -41,10 +41,31 @@ func NewFormula(path, tag string, version, dmg, appcast []byte) Formula {
 	}
 }
 
-var formulaRe = regexp.MustCompile(`else
-    version '(\d\.\d):(\d+)'
-    sha256 '([\da-f]+)'`)
-var appcastRe = regexp.MustCompile(`(checkpoint: ')([\da-f]+)`)
+var re = regexp.MustCompile(`else
+    version '(?P<version>\d\.\d):(?P<tag>\d+)'
+    sha256 '(?P<dmg>[\da-f]+)'
+(?P<skipped>(?s:.*))checkpoint: '(?P<appcast>[\da-f]+)`)
+
+var tmpl = `else
+    version '%s:%s'
+    sha256 '%x'
+${skipped}checkpoint: '%x`
+
+func (f *Formula) findMatches() (map[string][]byte, error) {
+	sm := re.FindSubmatch(f.text)
+	if len(sm) != 6 {
+		return nil, errors.New("cannot find elements")
+	}
+
+	m := make(map[string][]byte, 5)
+	for i, n := range re.SubexpNames() {
+		if i > 0 && n != "" {
+			m[n] = sm[i]
+		}
+	}
+
+	return m, nil
+}
 
 func (f *Formula) read() (element, error) {
 	e := element{}
@@ -53,21 +74,16 @@ func (f *Formula) read() (element, error) {
 		return e, errors.Wrap(err, "error in ReadFile")
 	}
 
-	b := formulaRe.FindSubmatch(text)
-	if len(b) != 4 {
-		return e, errors.Wrap(err, "cannot find elements")
-	}
-
-	a := appcastRe.FindSubmatch(text)
-	if len(a) != 3 {
-		return e, errors.Wrap(err, "cannot find appcast")
-	}
-
 	f.text = text
-	e.version = b[1]
-	e.tag = b[2]
-	e.dmg = convBytes(b[3])
-	e.appcast = convBytes(a[2])
+	m, err := f.findMatches()
+	if err != nil {
+		return e, errors.Wrap(err, "error in findMatches")
+	}
+
+	e.version = m["version"]
+	e.tag = m["tag"]
+	e.dmg = convBytes(m["dmg"])
+	e.appcast = convBytes(m["appcast"])
 	return e, nil
 }
 
@@ -84,16 +100,9 @@ func convBytes(b []byte) []byte {
 	return bb
 }
 
-var formulaReplace = `else
-    version '%s:%s'
-    sha256 '%x'`
-var appcastReplace = `${1}%x`
-
 func (f *Formula) save() error {
-	formulaRepl := []byte(fmt.Sprintf(formulaReplace, string(f.version), string(f.tag), f.dmg))
-	f.text = formulaRe.ReplaceAll(f.text, formulaRepl)
-	appcastRepl := []byte(fmt.Sprintf(appcastReplace, f.appcast))
-	f.text = appcastRe.ReplaceAll(f.text, appcastRepl)
+	repl := []byte(fmt.Sprintf(tmpl, string(f.version), f.tag, f.dmg, f.appcast))
+	f.text = re.ReplaceAll(f.text, repl)
 	if err := ioutil.WriteFile(f.path, f.text, 0644); err != nil {
 		return errors.Wrap(err, "error in WriteFile")
 	}
